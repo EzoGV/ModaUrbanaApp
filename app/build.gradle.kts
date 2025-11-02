@@ -57,4 +57,17 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    // Compose BOM = alinea versiones de Compose
+    implementation(platform("androidx.compose:compose-bom:2024.10.00"))
+
+    // Material 3 + foundation + icons
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.foundation:foundation")
+    implementation("androidx.compose.material:material-icons-extended")
+
+    // Navegación Compose
+    implementation("androidx.navigation:navigation-compose:2.8.2")
+
+    // Imágenes (Coil)
+    implementation("io.coil-kt:coil-compose:2.6.0")
 }
