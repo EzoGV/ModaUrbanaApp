@@ -11,8 +11,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
-import com.example.modaurbanaapp.repository.ProductRepository
-import com.example.modaurbanaapp.ui.components.ProductCard
+import com.example.modaurbanaapp.repository.*
+import com.example.modaurbanaapp.ui.components.*
 
 
 
