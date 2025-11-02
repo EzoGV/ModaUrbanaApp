@@ -13,6 +13,9 @@ import coil.compose.AsyncImage
 import androidx.compose.ui.layout.ContentScale
 import com.example.modaurbanaapp.model.Category
 import com.example.modaurbanaapp.repository.ProductRepository
+import com.example.modaurbanaapp.ui.theme.*
+import androidx.compose.ui.tooling.preview.Preview
+
 
 @Composable
 fun CatalogScreen() {
@@ -40,6 +43,8 @@ fun CatalogScreen() {
         ProductGrid(products)
     }
 }
+
+
 
 private enum class Order { Featured, PriceAsc, PriceDesc }
 
@@ -102,22 +107,59 @@ private fun ProductGrid(products: List<com.example.modaurbanaapp.model.Product>)
     }
 }
 
+
 @Composable
 private fun ProductCard(name: String, price: Int, oldPrice: Int?, imageUrl: String) {
-    Card {
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface // Blanco
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp) // sombra sutil
+    ) {
         Column {
+            // Imagen del producto
             AsyncImage(
                 model = imageUrl,
                 contentDescription = null,
-                modifier = Modifier.fillMaxWidth().height(140.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(140.dp),
                 contentScale = ContentScale.Crop
             )
+
+            // Texto de información
             Column(Modifier.padding(10.dp)) {
-                Text(name, maxLines = 2, style = MaterialTheme.typography.bodyMedium)
+
+                // Nombre del producto
+                Text(
+                    text = name,
+                    maxLines = 2,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurface // texto verde oscuro
+                    )
+                )
+
                 Spacer(Modifier.height(4.dp))
-                Text("$${price}", style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold))
+
+                // Precio
+                Text(
+                    text = "$${price}",
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                )
             }
         }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun CatalogScreenPreview() {
+    ModaUrbanaAppTheme(darkTheme = true) {
+        CatalogScreen()
     }
 }
 

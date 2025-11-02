@@ -16,7 +16,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import androidx.compose.ui.layout.ContentScale
 import com.example.modaurbanaapp.repository.ProductRepository
-
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.modaurbanaapp.ui.*
 @Composable
 fun HomeScreen() {
     val products = ProductRepository.featured()
@@ -36,7 +37,7 @@ fun HomeScreen() {
         }
 
         Text(
-            "Destacados",
+            "Más Vendidos",
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(horizontal = 4.dp)
         )
@@ -75,6 +76,14 @@ private fun ProductCard(name: String, price: Int, oldPrice: Int?, imageUrl: Stri
                 Text("$${price}", style = MaterialTheme.typography.titleSmall)
             }
         }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun HomeScreenPreview() {
+    com.example.modaurbanaapp.ui.theme.ModaUrbanaAppTheme(darkTheme = true) {
+        HomeScreen()
     }
 }
 
