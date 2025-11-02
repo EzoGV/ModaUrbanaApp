@@ -4,44 +4,54 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
 import com.example.modaurbanaapp.repository.ProductRepository
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.modaurbanaapp.ui.*
+import com.example.modaurbanaapp.ui.components.ProductCard
+
+
+
+
 @Composable
 fun HomeScreen() {
     val products = ProductRepository.featured()
 
-    Column(Modifier.fillMaxSize().padding(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        // Banner simple (imagen)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(all = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        // 🔹 Banner principal
         Card(
-            modifier = Modifier.fillMaxWidth().height(160.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(160.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
             AsyncImage(
                 model = "https://picsum.photos/1200/400",
-                contentDescription = null,
+                contentDescription = "Banner principal",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
         }
 
+        // 🔹 Título de sección
         Text(
-            "Más Vendidos",
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            text = "Más Vendidos",
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Bold
+            ),
             modifier = Modifier.padding(horizontal = 4.dp)
         )
 
+        // 🔹 Grid de productos
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 160.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -59,31 +69,3 @@ fun HomeScreen() {
         }
     }
 }
-
-@Composable
-private fun ProductCard(name: String, price: Int, oldPrice: Int?, imageUrl: String) {
-    Card {
-        Column {
-            AsyncImage(
-                model = imageUrl,
-                contentDescription = null,
-                modifier = Modifier.fillMaxWidth().height(140.dp),
-                contentScale = ContentScale.Crop
-            )
-            Column(Modifier.padding(10.dp)) {
-                Text(name, maxLines = 2, style = MaterialTheme.typography.bodyMedium)
-                Spacer(Modifier.height(4.dp))
-                Text("$${price}", style = MaterialTheme.typography.titleSmall)
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun HomeScreenPreview() {
-    com.example.modaurbanaapp.ui.theme.ModaUrbanaAppTheme(darkTheme = true) {
-        HomeScreen()
-    }
-}
-

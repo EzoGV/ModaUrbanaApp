@@ -7,10 +7,10 @@ import androidx.compose.runtime.Composable
 private val LightColorScheme = lightColorScheme(
     primary = DarkGreen,
     onPrimary = TextWhite,
-    background = CreamBackground, // Fondo crema
-    onBackground = TextWhite,      // Texto blanco sobre fondo crema
-    surface = White,               // Tarjetas blancas
-    onSurface = DarkGreen          // Texto verde oscuro dentro de tarjetas
+    background = CreamBackground,
+    onBackground = TextWhite,
+    surface = White,
+    onSurface = DarkGreen
 )
 
 @Composable

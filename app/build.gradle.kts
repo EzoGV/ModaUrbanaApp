@@ -70,4 +70,24 @@ dependencies {
 
     // Imágenes (Coil)
     implementation("io.coil-kt:coil-compose:2.6.0")
+
+    // ViewModel + lifecycle
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.6")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+    // Compose
+    implementation("androidx.compose.ui:ui:1.5.0")
+    implementation("androidx.compose.material3:material3:1.1.2")
+    implementation("androidx.activity:activity-compose:1.7.2")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.5.0")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.5.0")
+
+    // Lazy grids
+    implementation("androidx.compose.foundation:foundation:1.5.0")
+
+    // Coil para imágenes
+    implementation("io.coil-kt:coil-compose:2.4.0")
 }

@@ -9,45 +9,65 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import androidx.compose.ui.layout.ContentScale
-import com.example.modaurbanaapp.model.Category
-import com.example.modaurbanaapp.repository.ProductRepository
-import com.example.modaurbanaapp.ui.theme.*
 import androidx.compose.ui.tooling.preview.Preview
+import coil.compose.AsyncImage
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.modaurbanaapp.model.Category
+import com.example.modaurbanaapp.model.Product
+import com.example.modaurbanaapp.repository.LocalProductRepository
+import com.example.modaurbanaapp.ui.theme.ModaUrbanaAppTheme
+import com.example.modaurbanaapp.viewmodel.CatalogViewModel
+import com.example.modaurbanaapp.viewmodel.CatalogViewModelFactory
+import com.example.modaurbanaapp.ui.state.Order
+import com.example.modaurbanaapp.ui.components.*
 
-
+// 🧭 Pantalla principal del catálogo
 @Composable
-fun CatalogScreen() {
-    var selectedCategory by remember { mutableStateOf(Category.Polerones) }
-    var order by remember { mutableStateOf(Order.Featured) }
+fun CatalogScreen(
+    viewModel: CatalogViewModel = viewModel(factory = CatalogViewModelFactory())
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val products = remember(selectedCategory, order) {
-        val base = ProductRepository.byCategory(selectedCategory)
-        when (order) {
-            Order.Featured -> base
-            Order.PriceAsc -> base.sortedBy { it.price }
-            Order.PriceDesc -> base.sortedByDescending { it.price }
-        }
-    }
+    // Obtiene las categorías desde el repositorio local
+    val categories = LocalProductRepository().allCategories()
 
-    Column(Modifier.fillMaxSize().padding(12.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(all = 12.dp)
+    ) {
+        // 🔹 Tabs de categorías
         CategoryTabs(
-            categories = ProductRepository.allCategories(),
-            selected = selectedCategory,
-            onSelect = { selectedCategory = it }
+            categories = categories,
+            selected = categories.firstOrNull { it == uiState.selectedCategory } ?: categories.first(),
+            onSelect = { viewModel.changeCategory(it) }
         )
+
+
         Spacer(Modifier.height(8.dp))
-        FilterBar(order = order, onChange = { order = it })
+
+        // 🔹 Filtro de orden
+        FilterBar(
+            order = uiState.order,
+            onChange = { viewModel.changeOrder(it) } // ✅ sin "order =" dentro
+        )
+
         Spacer(Modifier.height(12.dp))
-        ProductGrid(products)
+
+        // 🔹 Cuerpo principal
+        when {
+            uiState.isLoading -> CircularProgressIndicator()
+            uiState.error != null -> Text(text = "Error: ${uiState.error}")
+            else -> ProductGrid(uiState.products)
+        }
     }
 }
 
+enum class Order { Featured, PriceAsc, PriceDesc }
 
-
-private enum class Order { Featured, PriceAsc, PriceDesc }
-
+// 🔹 Tabs para seleccionar categorías
 @Composable
 private fun CategoryTabs(
     categories: List<Category>,
@@ -56,7 +76,6 @@ private fun CategoryTabs(
 ) {
     ScrollableTabRow(selectedTabIndex = categories.indexOf(selected)) {
         categories.forEach { c ->
-            val index = categories.indexOf(c)
             Tab(
                 selected = c == selected,
                 onClick = { onSelect(c) },
@@ -66,13 +85,13 @@ private fun CategoryTabs(
     }
 }
 
+// 🔹 Barra de filtros (Destacados / Precio ↑ / Precio ↓)
 @Composable
 private fun FilterBar(order: Order, onChange: (Order) -> Unit) {
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         AssistChip(
             label = { Text("Destacados") },
             onClick = { onChange(Order.Featured) },
-            leadingIcon = {},
             enabled = order != Order.Featured
         )
         AssistChip(
@@ -88,8 +107,9 @@ private fun FilterBar(order: Order, onChange: (Order) -> Unit) {
     }
 }
 
+// 🔹 Grilla de productos
 @Composable
-private fun ProductGrid(products: List<com.example.modaurbanaapp.model.Product>) {
+private fun ProductGrid(products: List<Product>) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 160.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -107,27 +127,32 @@ private fun ProductGrid(products: List<com.example.modaurbanaapp.model.Product>)
     }
 }
 
-
+// 🔹 Tarjeta individual de producto
 @Composable
-private fun ProductCard(name: String, price: Int, oldPrice: Int?, imageUrl: String) {
+    fun ProductCard(
+    name: String,
+    price: Int,
+    oldPrice: Int?,
+    imageUrl: String
+) {
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface // Blanco
+            containerColor = MaterialTheme.colorScheme.surface
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp) // sombra sutil
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Column {
             // Imagen del producto
             AsyncImage(
                 model = imageUrl,
-                contentDescription = null,
+                contentDescription = name,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(140.dp),
                 contentScale = ContentScale.Crop
             )
 
-            // Texto de información
+            // Información
             Column(Modifier.padding(10.dp)) {
 
                 // Nombre del producto
@@ -135,7 +160,7 @@ private fun ProductCard(name: String, price: Int, oldPrice: Int?, imageUrl: Stri
                     text = name,
                     maxLines = 2,
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.onSurface // texto verde oscuro
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 )
 
@@ -143,7 +168,7 @@ private fun ProductCard(name: String, price: Int, oldPrice: Int?, imageUrl: Stri
 
                 // Precio
                 Text(
-                    text = "$${price}",
+                    text = "$$price",
                     style = MaterialTheme.typography.titleSmall.copy(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -158,8 +183,7 @@ private fun ProductCard(name: String, price: Int, oldPrice: Int?, imageUrl: Stri
 @Preview(showBackground = true)
 @Composable
 fun CatalogScreenPreview() {
-    ModaUrbanaAppTheme(darkTheme = true) {
+    ModaUrbanaAppTheme(darkTheme = false) {
         CatalogScreen()
     }
 }
-
