@@ -5,13 +5,12 @@ import retrofit2.http.*
 
 interface ApiService {
 
-    @POST("login")
+    @POST("auth/login")            // ejemplo dummyjson: /auth/login
     suspend fun login(@Body body: LoginRequestDto): LoginResponseDto
 
-    @GET("me")
+    @GET("auth/me")                // si tu API no tiene /me, puedes omitir
     suspend fun me(): MeResponseDto
-    // Nota: el token se inyecta por interceptor (no hace falta @Header aquí)
 
-    @GET("products")
+    @GET("products")               // o la ruta que defina tu API
     suspend fun products(): List<ProductDto>
 }

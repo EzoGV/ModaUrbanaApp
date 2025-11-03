@@ -18,8 +18,8 @@ import com.example.modaurbanaapp.model.Category
 import com.example.modaurbanaapp.model.Product
 import com.example.modaurbanaapp.repository.LocalProductRepository
 import com.example.modaurbanaapp.ui.theme.ModaUrbanaAppTheme
-import com.example.modaurbanaapp.viewmodel.CatalogViewModel
-import com.example.modaurbanaapp.viewmodel.CatalogViewModelFactory
+import com.example.modaurbanaapp.ViewModel.CatalogViewModel
+import com.example.modaurbanaapp.ViewModel.CatalogViewModelFactory
 import com.example.modaurbanaapp.ui.state.Order
 import com.example.modaurbanaapp.ui.components.*
 
@@ -179,11 +179,11 @@ private fun ProductGrid(products: List<Product>) {
     }
 }
 
-
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun CatalogScreenPreview() {
-    ModaUrbanaAppTheme(darkTheme = false) {
+fun PreviewCatalogScreen() {
+    com.example.modaurbanaapp.ui.theme.ModaUrbanaAppTheme {
         CatalogScreen()
     }
 }
+

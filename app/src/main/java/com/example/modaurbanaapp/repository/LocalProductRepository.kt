@@ -3,8 +3,7 @@ package com.example.modaurbanaapp.repository
 import com.example.modaurbanaapp.model.Category
 import com.example.modaurbanaapp.model.Product
 
-class LocalProductRepository : ProductDataSource {
-
+class LocalProductRepository : ProductRepository  {
     private val all = listOf(
         Product("1","Polerón Spider® – Negro",73990,90000,"https://cdn-images.farfetch-contents.com/28/81/41/53/28814153_58019764_1000.jpg",Category.Polerones),
         Product("2","Adidas x Thug Club Teamgeist Hooded Zip Up – Rojo",91990,150000,"https://lustmexico.com/cdn/shop/files/KC2210_3.png?v=1760996184",Category.Polerones),

@@ -10,16 +10,13 @@ import kotlinx.coroutines.flow.map
 private val Context.dataStore by preferencesDataStore("session_prefs")
 
 class SessionManager(private val context: Context) {
-    companion object {
-        private val KEY_TOKEN = stringPreferencesKey("auth_token")
-    }
+    companion object { private val KEY_TOKEN = stringPreferencesKey("auth_token") }
 
     val tokenFlow: Flow<String?> = context.dataStore.data.map { it[KEY_TOKEN] }
 
     suspend fun saveToken(token: String) {
         context.dataStore.edit { it[KEY_TOKEN] = token }
     }
-
     suspend fun clear() {
         context.dataStore.edit { it.remove(KEY_TOKEN) }
     }

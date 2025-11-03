@@ -10,26 +10,19 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 object RetrofitClient {
-
-    // Cambia por la base real de tu API:
-    private const val BASE_URL = "https://tu-api.ejemplo.com/api/"
+    private const val BASE_URL = "https://dummyjson.com/" // cambia si tienes backend propio
 
     private lateinit var _api: ApiService
     val api: ApiService get() = _api
 
     fun init(context: Context) {
         val session = SessionManager(context)
-
-        val moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-
-        val logging = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
+        val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
         val client = OkHttpClient.Builder()
-            .addInterceptor(logging)
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
             .addInterceptor(AuthInterceptor(session))
             .build()
 

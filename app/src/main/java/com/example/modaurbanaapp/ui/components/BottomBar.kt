@@ -14,22 +14,34 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.modaurbanaapp.navigation.Screen
+import com.example.modaurbanaapp.ui.navigation.Screen
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.PersonAdd
+
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.PersonAdd
 
 @Composable
 fun BottomBar(navController: NavHostController) {
-    val items: List<Screen> = listOf(Screen.Home, Screen.Catalog)
+    val items = listOf(Screen.Home, Screen.Catalog)
 
     NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentDest = navBackStackEntry?.destination
+        val currentDestination = navBackStackEntry?.destination
 
         items.forEach { screen ->
-            val selected = currentDest?.hierarchy?.any { it.route == screen.route } == true
-            val (iconFilled, iconOutlined) = when (screen) {
-                Screen.Home -> Icons.Filled.Home to Icons.Outlined.Home
-                Screen.Catalog -> Icons.Filled.Storefront to Icons.Outlined.Storefront
+            val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
+
+            val (iconSelected, iconUnselected, label) = when (screen) {
+                Screen.Home -> Triple(Icons.Filled.Home, Icons.Outlined.Home, "Inicio")
+                Screen.Catalog -> Triple(Icons.Filled.Storefront, Icons.Outlined.Storefront, "Catálogo")
+                Screen.Profile -> Triple(Icons.Filled.Person, Icons.Outlined.Person, "Perfil")
+                Screen.Login -> Triple(Icons.Filled.Lock, Icons.Outlined.Lock, "Login")
+                Screen.Register -> Triple(Icons.Filled.PersonAdd, Icons.Outlined.PersonAdd, "Registro")
             }
+
 
             NavigationBarItem(
                 selected = selected,
@@ -42,8 +54,13 @@ fun BottomBar(navController: NavHostController) {
                         }
                     }
                 },
-                icon = { Icon(if (selected) iconFilled else iconOutlined, null) },
-                label = { Text(if (screen == Screen.Home) "Inicio" else "Catálogo") }
+                icon = {
+                    Icon(
+                        imageVector = if (selected) iconSelected else iconUnselected,
+                        contentDescription = label
+                    )
+                },
+                label = { Text(label) }
             )
         }
     }

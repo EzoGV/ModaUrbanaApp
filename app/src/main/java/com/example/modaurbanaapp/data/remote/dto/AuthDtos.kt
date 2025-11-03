@@ -2,17 +2,14 @@ package com.example.modaurbanaapp.data.remote.dto
 
 import com.squareup.moshi.Json
 
-data class LoginRequestDto(
-    val email: String,
-    val password: String
-)
+data class LoginRequestDto(val username: String, val password: String)
 
 data class LoginResponseDto(
-    @Json(name = "access_token") val accessToken: String
+    @Json(name = "token") val accessToken: String
 )
 
 data class MeResponseDto(
-    val id: String,
-    val name: String,
+    val id: Int,
+    val username: String,
     val email: String
 )
