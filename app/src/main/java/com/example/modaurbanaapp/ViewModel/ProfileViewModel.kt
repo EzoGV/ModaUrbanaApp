@@ -1,16 +1,38 @@
 package com.example.modaurbanaapp.ViewModel
 
+import android.app.Application
+import android.net.Uri
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.modaurbanaapp.data.local.AvatarManager
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ProfileViewModel(private val avatar: AvatarManager) : ViewModel() {
-    val avatarUri = avatar.avatarUri.stateIn(viewModelScope, SharingStarted.Eagerly, null)
+class ProfileViewModel(app: Application) : AndroidViewModel(app) {
 
-    fun saveAvatar(uri: String) {
-        viewModelScope.launch { avatar.saveAvatar(uri) }
+    private val _avatarUri = MutableStateFlow<Uri?>(null)
+    val avatarUri: StateFlow<Uri?> = _avatarUri
+
+    init {
+        // TODO: si tienes AvatarManager/DataStore, carga aquí el valor persistido
+        // viewModelScope.launch { _avatarUri.value = avatarManager.load() }
+    }
+
+    /** Actualiza el avatar y (opcional) persiste */
+    fun updateAvatar(uri: Uri) {
+        viewModelScope.launch {
+            _avatarUri.value = uri
+            // TODO: si tienes AvatarManager/DataStore, persiste aquí:
+            // avatarManager.save(uri)
+        }
+    }
+}
+
+@Suppress("UNCHECKED_CAST")
+class ProfileViewModelFactory(private val app: Application) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return ProfileViewModel(app) as T
     }
 }
