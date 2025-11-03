@@ -16,7 +16,7 @@ data class LoginUiState(
 )
 
 class LoginViewModel(private val session: SessionManager) : ViewModel() {
-    private val _ui = MutableStateFlow(LoginUiState())
+    val _ui = MutableStateFlow(LoginUiState())
     val ui = _ui.asStateFlow()
 
     fun login(username: String, password: String) {
