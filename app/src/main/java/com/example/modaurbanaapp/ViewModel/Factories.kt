@@ -26,7 +26,11 @@ class LoginViewModelFactory(app: Application) : ViewModelProvider.Factory {
 }
 
 class ProfileViewModelFactory(private val app: Application) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return ProfileViewModel(app) as T
+        if (modelClass.isAssignableFrom(ProfileViewModel::class.java)) {
+            return ProfileViewModel(app) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }

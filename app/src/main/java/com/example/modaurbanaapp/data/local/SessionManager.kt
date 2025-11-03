@@ -1,23 +1,18 @@
 package com.example.modaurbanaapp.data.local
 
 import android.content.Context
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
-private val Context.dataStore by preferencesDataStore("session_prefs")
+class SessionManager(context: Context) {
 
-class SessionManager(private val context: Context) {
-    companion object { private val KEY_TOKEN = stringPreferencesKey("auth_token") }
+    private val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
 
-    val tokenFlow: Flow<String?> = context.dataStore.data.map { it[KEY_TOKEN] }
+    private val KEY_TOKEN = "auth_token"
 
-    suspend fun saveToken(token: String) {
-        context.dataStore.edit { it[KEY_TOKEN] = token }
-    }
-    suspend fun clear() {
-        context.dataStore.edit { it.remove(KEY_TOKEN) }
+    fun getToken(): String? = prefs.getString(KEY_TOKEN, null)
+
+    fun setToken(value: String?) {
+        prefs.edit().apply {
+            if (value == null) remove(KEY_TOKEN) else putString(KEY_TOKEN, value)
+        }.apply()
     }
 }

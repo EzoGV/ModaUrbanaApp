@@ -1,15 +1,24 @@
 package com.example.modaurbanaapp.data.local
 
 import android.content.Context
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import android.net.Uri
 
-private val Context.dataStore by preferencesDataStore("avatar_prefs")
-class AvatarManager(private val context: Context) {
-    companion object { private val KEY_AVATAR_URI = stringPreferencesKey("avatar_uri") }
-    val avatarUri: Flow<String?> = context.dataStore.data.map { it[KEY_AVATAR_URI] }
-    suspend fun saveAvatar(uri: String) { context.dataStore.edit { it[KEY_AVATAR_URI] = uri } }
+class AvatarManager(context: Context) {
+
+    private val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+
+    private val KEY_AVATAR_URI = "avatar_uri"
+
+    fun get(): Uri? {
+        val s = prefs.getString(KEY_AVATAR_URI, null)
+        return s?.let { Uri.parse(it) }
+    }
+
+    fun set(uri: Uri) {
+        prefs.edit().putString(KEY_AVATAR_URI, uri.toString()).apply()
+    }
+
+    fun clear() {
+        prefs.edit().remove(KEY_AVATAR_URI).apply()
+    }
 }
