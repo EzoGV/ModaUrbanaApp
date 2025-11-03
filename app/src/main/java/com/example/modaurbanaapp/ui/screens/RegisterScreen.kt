@@ -29,8 +29,6 @@ fun RegisterScreen(navController: NavHostController) {
     val ui by vm.ui.collectAsStateWithLifecycle()
 
     if (ui.isSuccess) {
-        // Paso de información mínimo: navegamos a Profile y/o Login
-        // (Puedes elegir: a Login o directo a Profile. Aquí vamos a Profile)
         navController.navigate(Screen.Profile.route) {
             popUpTo(Screen.Register.route) { inclusive = true }
         }

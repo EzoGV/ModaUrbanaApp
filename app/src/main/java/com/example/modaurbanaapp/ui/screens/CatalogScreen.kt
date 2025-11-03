@@ -43,7 +43,7 @@ fun CatalogScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val categories = LocalProductRepository().allCategories()
 
-    // VM del carrito para sumar productos
+
     val cartVm: CartViewModel = viewModel()
 
     Column(
@@ -51,7 +51,6 @@ fun CatalogScreen(
             .fillMaxSize()
             .padding(12.dp)
     ) {
-        // Tabs de categorías
         CategoryTabs(
             categories = categories,
             selected = categories.firstOrNull { it == uiState.selectedCategory } ?: categories.first(),
@@ -60,7 +59,6 @@ fun CatalogScreen(
 
         Spacer(Modifier.height(8.dp))
 
-        // Barra de orden
         FilterBar(
             order = uiState.order,
             onChange = viewModel::changeOrder
@@ -68,7 +66,6 @@ fun CatalogScreen(
 
         Spacer(Modifier.height(12.dp))
 
-        // Contenido
         when {
             uiState.isLoading -> CircularProgressIndicator()
             uiState.error != null -> Text(text = "Error: ${uiState.error}")

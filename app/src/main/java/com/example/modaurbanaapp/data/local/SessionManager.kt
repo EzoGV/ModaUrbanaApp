@@ -12,17 +12,15 @@ class SessionManager(context: Context) {
         private const val KEY_TOKEN = "auth_token"
     }
 
-    // ✅ Guarda el token JWT o similar
     fun saveAuthToken(token: String) {
         prefs.edit().putString(KEY_TOKEN, token).apply()
     }
 
-    // ✅ Obtiene el token guardado
     fun getAuthToken(): String? {
         return prefs.getString(KEY_TOKEN, null)
     }
 
-    // ✅ Limpia sesión (por ejemplo, al cerrar sesión)
+
     fun clearSession() {
         prefs.edit().clear().apply()
     }
