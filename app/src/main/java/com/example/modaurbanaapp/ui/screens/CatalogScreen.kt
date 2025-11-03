@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -32,19 +33,18 @@ import com.example.modaurbanaapp.model.Product
 import com.example.modaurbanaapp.repository.LocalProductRepository
 import com.example.modaurbanaapp.ViewModel.CatalogViewModel
 import com.example.modaurbanaapp.ViewModel.CatalogViewModelFactory
+import com.example.modaurbanaapp.ViewModel.CartViewModel
 import com.example.modaurbanaapp.ui.state.Order
 
-
-// ------ TIPOS LOCALES (sin importar Order externo para evitar conflictos) ------
-enum class Order { Featured, PriceAsc, PriceDesc }
-
-// ------------------- PANTALLA PRINCIPAL DEL CATÁLOGO -------------------
 @Composable
 fun CatalogScreen(
     viewModel: CatalogViewModel = viewModel(factory = CatalogViewModelFactory())
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val categories = LocalProductRepository().allCategories()
+
+    // VM del carrito para sumar productos
+    val cartVm: CartViewModel = viewModel()
 
     Column(
         modifier = Modifier
@@ -55,29 +55,31 @@ fun CatalogScreen(
         CategoryTabs(
             categories = categories,
             selected = categories.firstOrNull { it == uiState.selectedCategory } ?: categories.first(),
-            onSelect = { viewModel.changeCategory(it) }
+            onSelect = viewModel::changeCategory
         )
 
         Spacer(Modifier.height(8.dp))
 
-        // Filtro de orden
+        // Barra de orden
         FilterBar(
             order = uiState.order,
-            onChange = { viewModel.changeOrder(it) }
+            onChange = viewModel::changeOrder
         )
 
         Spacer(Modifier.height(12.dp))
 
-        // Contenido principal
+        // Contenido
         when {
             uiState.isLoading -> CircularProgressIndicator()
             uiState.error != null -> Text(text = "Error: ${uiState.error}")
-            else -> ProductGrid(uiState.products)
+            else -> ProductGrid(
+                products = uiState.products,
+                onAdd = cartVm::add      // << agrega al carrito
+            )
         }
     }
 }
 
-// ------------------- COMPONENTES DE UI -------------------
 @Composable
 private fun CategoryTabs(
     categories: List<Category>,
@@ -119,7 +121,10 @@ private fun FilterBar(order: Order, onChange: (Order) -> Unit) {
 }
 
 @Composable
-private fun ProductGrid(products: List<Product>) {
+private fun ProductGrid(
+    products: List<Product>,
+    onAdd: (Product) -> Unit
+) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 160.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -132,7 +137,8 @@ private fun ProductGrid(products: List<Product>) {
                 name = p.name,
                 price = p.price,
                 oldPrice = p.oldPrice,
-                imageUrl = p.imageUrl
+                imageUrl = p.imageUrl,
+                onAdd = { onAdd(p) }
             )
         }
     }
@@ -143,7 +149,8 @@ private fun ProductCard(
     name: String,
     price: Int,
     oldPrice: Int?,
-    imageUrl: String
+    imageUrl: String,
+    onAdd: () -> Unit
 ) {
     Card(
         colors = CardDefaults.cardColors(
@@ -151,7 +158,7 @@ private fun ProductCard(
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
-        Column {
+        androidx.compose.foundation.layout.Column {
             AsyncImage(
                 model = imageUrl,
                 contentDescription = name,
@@ -160,7 +167,7 @@ private fun ProductCard(
                     .height(140.dp),
                 contentScale = ContentScale.Crop
             )
-            Column(Modifier.padding(10.dp)) {
+            androidx.compose.foundation.layout.Column(Modifier.padding(10.dp)) {
                 Text(
                     text = name,
                     maxLines = 2,
@@ -176,6 +183,8 @@ private fun ProductCard(
                         color = MaterialTheme.colorScheme.primary
                     )
                 )
+                Spacer(Modifier.height(8.dp))
+                Button(onClick = onAdd) { Text("Agregar al carrito") }
             }
         }
     }
