@@ -24,7 +24,8 @@ class LoginViewModel(private val session: SessionManager) : ViewModel() {
             _ui.value = LoginUiState(isLoading = true)
             try {
                 val resp = RetrofitClient.api.login(LoginRequestDto(username, password))
-                session.saveToken(resp.accessToken)
+                // ✅ El campo real en LoginResponseDto es authToken, no accessToken
+                session.saveAuthToken(resp.authToken)
                 _ui.value = LoginUiState(isLogged = true)
             } catch (e: Exception) {
                 _ui.value = LoginUiState(error = e.message ?: "Error de login")

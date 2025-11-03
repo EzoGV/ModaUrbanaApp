@@ -1,18 +1,29 @@
 package com.example.modaurbanaapp.data.local
 
 import android.content.Context
+import android.content.SharedPreferences
 
 class SessionManager(context: Context) {
 
-    private val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences =
+        context.getSharedPreferences("user_session", Context.MODE_PRIVATE)
 
-    private val KEY_TOKEN = "auth_token"
+    companion object {
+        private const val KEY_TOKEN = "auth_token"
+    }
 
-    fun getToken(): String? = prefs.getString(KEY_TOKEN, null)
+    // ✅ Guarda el token JWT o similar
+    fun saveAuthToken(token: String) {
+        prefs.edit().putString(KEY_TOKEN, token).apply()
+    }
 
-    fun setToken(value: String?) {
-        prefs.edit().apply {
-            if (value == null) remove(KEY_TOKEN) else putString(KEY_TOKEN, value)
-        }.apply()
+    // ✅ Obtiene el token guardado
+    fun getAuthToken(): String? {
+        return prefs.getString(KEY_TOKEN, null)
+    }
+
+    // ✅ Limpia sesión (por ejemplo, al cerrar sesión)
+    fun clearSession() {
+        prefs.edit().clear().apply()
     }
 }
