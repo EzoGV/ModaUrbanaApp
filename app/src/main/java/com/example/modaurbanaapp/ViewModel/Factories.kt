@@ -25,8 +25,8 @@ class LoginViewModelFactory(app: Application) : ViewModelProvider.Factory {
         LoginViewModel(session) as T
 }
 
-class ProfileViewModelFactory(app: Application) : ViewModelProvider.Factory {
-    private val avatar = AvatarManager(app)
-    override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        ProfileViewModel(avatar) as T
+class ProfileViewModelFactory(private val app: Application) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return ProfileViewModel(app) as T
+    }
 }

@@ -12,19 +12,18 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(app: Application) : AndroidViewModel(app) {
 
+    private val avatarManager = AvatarManager(app) // ✅ aquí se usa el Application
     private val _avatarUri = MutableStateFlow<Uri?>(null)
     val avatarUri: StateFlow<Uri?> = _avatarUri
 
     init {
-        // TODO: si tienes AvatarManager/DataStore, carga aquí el valor persistido
+        // Si tienes persistencia:
         // viewModelScope.launch { _avatarUri.value = avatarManager.load() }
     }
 
-    /** Actualiza el avatar y (opcional) persiste */
     fun updateAvatar(uri: Uri) {
         viewModelScope.launch {
             _avatarUri.value = uri
-            // TODO: si tienes AvatarManager/DataStore, persiste aquí:
             // avatarManager.save(uri)
         }
     }
