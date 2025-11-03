@@ -1,8 +1,19 @@
 package com.example.modaurbanaapp.data.remote.dto
 
-import com.squareup.moshi.Json
+// DTOs de autenticación y perfil
+data class LoginRequestDto(
+    val email: String,
+    val password: String
+)
 
-data class LoginRequestDto(val username: String, val password: String)
-data class LoginResponseDto(val token: String)
-data class MeResponseDto(val id: Int, val name: String, val email: String)
-data class ProductDto(val id: Int, val name: String, val price: Int)
+data class LoginResponseDto(
+    val authToken: String,
+    val user: MeResponseDto
+)
+
+data class MeResponseDto(
+    val id: Int,
+    val email: String,
+    val name: String?,
+    val avatarUrl: String?
+)

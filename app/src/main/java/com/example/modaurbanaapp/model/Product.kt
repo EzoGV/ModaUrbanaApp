@@ -1,7 +1,7 @@
 package com.example.modaurbanaapp.model
 
 data class Product(
-    val id: String,
+    val id: Int,
     val name: String,
     val price: Int,
     val oldPrice: Int? = null,
