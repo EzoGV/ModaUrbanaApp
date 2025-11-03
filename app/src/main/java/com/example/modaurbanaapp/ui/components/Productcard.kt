@@ -24,7 +24,6 @@ fun ProductCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Column {
-            // Imagen del producto
             AsyncImage(
                 model = imageUrl,
                 contentDescription = name,
@@ -34,7 +33,6 @@ fun ProductCard(
                 contentScale = ContentScale.Crop
             )
 
-            // Información de texto
             Column(Modifier.padding(10.dp)) {
                 Text(
                     text = name,

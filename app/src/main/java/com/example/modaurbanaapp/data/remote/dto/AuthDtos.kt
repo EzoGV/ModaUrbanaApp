@@ -1,6 +1,5 @@
 package com.example.modaurbanaapp.data.remote.dto
 
-// DTOs de autenticación y perfil
 data class LoginRequestDto(
     val email: String,
     val password: String

@@ -1,9 +1,11 @@
 package com.example.modaurbanaapp.ui.screens
 
+import android.Manifest
 import android.app.Application
 import android.content.Context
+import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
@@ -16,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
@@ -33,37 +36,41 @@ fun ProfileScreen(
     val context = LocalContext.current
     val avatarUri = profileVm.avatarUri.collectAsState().value
 
-    // ----- Galería -----
+    // ---------- GALERÍA ----------
     val pickImage = rememberLauncherForActivityResult(GetContent()) { uri ->
         uri?.let { profileVm.updateAvatar(it) }
     }
 
-    // ----- Cámara -----
+    // ---------- CÁMARA ----------
     var cameraOutputUri by remember { mutableStateOf<Uri?>(null) }
     val takePicture = rememberLauncherForActivityResult(TakePicture()) { ok ->
         if (ok) {
-            cameraOutputUri?.let { profileVm.updateAvatar(it) }  // evita smart cast
+            cameraOutputUri?.let { profileVm.updateAvatar(it) }
         }
     }
 
-    // Permiso de cámara
+    // ---------- PERMISO DE CÁMARA ----------
     val requestCameraPermission = rememberLauncherForActivityResult(RequestPermission()) { granted ->
         if (granted) {
             cameraOutputUri = createTempImageUri(context)
             cameraOutputUri?.let { takePicture.launch(it) }
+        } else {
+            Toast.makeText(context, "Permiso de cámara denegado", Toast.LENGTH_SHORT).show()
         }
     }
 
     fun openCamera() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestCameraPermission.launch(android.Manifest.permission.CAMERA)
-        } else {
+        val permissionCheck =
+            ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             cameraOutputUri = createTempImageUri(context)
             cameraOutputUri?.let { takePicture.launch(it) }
+        } else {
+            requestCameraPermission.launch(Manifest.permission.CAMERA)
         }
     }
 
-    // ----- UI -----
+    // ---------- UI ----------
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -91,20 +98,30 @@ fun ProfileScreen(
 
         Spacer(Modifier.height(20.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Button(onClick = { pickImage.launch("image/*") }) { Text("Elegir de galería") }
-            Button(onClick = { openCamera() }) { Text("Tomar foto") }
+            Button(onClick = { pickImage.launch("image/*") }) {
+                Text("Elegir de galería")
+            }
+            Button(onClick = { openCamera() }) {
+                Text("Tomar foto")
+            }
         }
     }
 }
 
-/** Función normal (no composable) para crear un URI temporal con FileProvider */
+
 private fun createTempImageUri(context: Context): Uri {
-    val file = File.createTempFile("avatar_", ".jpg", context.cacheDir).apply { deleteOnExit() }
-    return FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
+    val photoFile = File(context.externalCacheDir, "profile_temp.jpg")
+    return FileProvider.getUriForFile(
+        context,
+        "${context.packageName}.provider",
+        photoFile
+    )
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewProfileScreen() {
-    ModaUrbanaAppTheme { ProfileScreen() }
+    ModaUrbanaAppTheme {
+        ProfileScreen()
+    }
 }

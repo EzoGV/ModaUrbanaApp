@@ -34,7 +34,6 @@ fun LoginScreen(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = {
-                // Aquí navegamos directamente al Home, como en las guías
                 navController.navigate(Screen.Home.route)
             }) {
                 Text("Entrar")
@@ -52,6 +51,5 @@ fun LoginScreen(navController: NavHostController) {
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-    // Solo para vista previa, sin navegación real
     Surface { Text("Vista previa LoginScreen") }
 }

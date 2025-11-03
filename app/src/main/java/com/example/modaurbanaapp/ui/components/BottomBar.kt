@@ -25,7 +25,7 @@ fun BottomBar(navController: NavHostController) {
     val items = listOf(
         Screen.Home,
         Screen.Catalog,
-        Screen.Cart,      // << NUEVO
+        Screen.Cart,
         Screen.Profile
     )
 

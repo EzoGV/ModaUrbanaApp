@@ -10,7 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 object RetrofitClient {
-    private const val BASE_URL = "https://dummyjson.com/" // cambia si tienes backend propio
+    private const val BASE_URL = "https://dummyjson.com/"
 
     private lateinit var _api: ApiService
     val api: ApiService get() = _api
