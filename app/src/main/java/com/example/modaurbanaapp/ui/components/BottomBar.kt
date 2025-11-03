@@ -4,9 +4,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Store
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Store
+import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -20,10 +22,10 @@ import com.example.modaurbanaapp.ui.navigation.Screen
 
 @Composable
 fun BottomBar(navController: NavHostController) {
-    // Solo rutas visibles en la barra
     val items = listOf(
         Screen.Home,
         Screen.Catalog,
+        Screen.Cart,      // << NUEVO
         Screen.Profile
     )
 
@@ -33,10 +35,10 @@ fun BottomBar(navController: NavHostController) {
 
         items.forEach { screen ->
             val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
-
-            val (iconSelected, iconUnselected, label) = when (screen) {
-                Screen.Home -> Triple(Icons.Filled.Home, Icons.Outlined.Home, "Inicio")
+            val (iconSel, iconUnsel, label) = when (screen) {
+                Screen.Home    -> Triple(Icons.Filled.Home, Icons.Outlined.Home, "Inicio")
                 Screen.Catalog -> Triple(Icons.Filled.Store, Icons.Outlined.Store, "Catálogo")
+                Screen.Cart    -> Triple(Icons.Filled.ShoppingCart, Icons.Outlined.ShoppingCart, "Carrito")
                 Screen.Profile -> Triple(Icons.Filled.Person, Icons.Outlined.Person, "Perfil")
                 else -> Triple(Icons.Filled.Home, Icons.Outlined.Home, "")
             }
@@ -46,14 +48,13 @@ fun BottomBar(navController: NavHostController) {
                 onClick = {
                     if (!selected) {
                         navController.navigate(screen.route) {
-                            // Mantiene el histórico limpio y restaura estado
                             popUpTo(Screen.Home.route) { inclusive = false }
                             launchSingleTop = true
                             restoreState = true
                         }
                     }
                 },
-                icon = { Icon(imageVector = if (selected) iconSelected else iconUnselected, contentDescription = label) },
+                icon = { Icon(if (selected) iconSel else iconUnsel, contentDescription = label) },
                 label = { Text(label) }
             )
         }
