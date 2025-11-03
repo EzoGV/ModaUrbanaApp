@@ -13,37 +13,41 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.modaurbanaapp.ui.navigation.Screen
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun HomeScreen(navController: NavHostController) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
-                .padding(24.dp)
+                .padding(16.dp)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Iniciar Sesión",
-                style = MaterialTheme.typography.headlineMedium
+                text = "Moda Urbana",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = {
-                // Aquí navegamos directamente al Home, como en las guías
-                navController.navigate(Screen.Home.route)
-            }) {
-                Text("Entrar")
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = "Tendencias, estilo y comodidad",
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Spacer(Modifier.height(24.dp))
+
+            Button(onClick = { navController.navigate(Screen.Catalog.route) }) {
+                Text("Ver catálogo")
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = {
-                navController.navigate(Screen.Register.route)
-            }) {
-                Text("Registrarse")
+            Spacer(Modifier.height(12.dp))
+            Button(onClick = { navController.navigate(Screen.Profile.route) }) {
+                Text("Mi perfil")
             }
         }
     }
@@ -51,7 +55,7 @@ fun LoginScreen(navController: NavHostController) {
 
 @Preview(showBackground = true)
 @Composable
-fun LoginScreenPreview() {
-    // Solo para vista previa, sin navegación real
-    Surface { Text("Vista previa LoginScreen") }
+private fun HomeScreenPreview() {
+    val nav = rememberNavController()
+    HomeScreen(navController = nav)
 }

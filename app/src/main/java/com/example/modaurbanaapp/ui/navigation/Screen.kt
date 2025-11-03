@@ -1,9 +1,9 @@
 package com.example.modaurbanaapp.ui.navigation
 
 sealed class Screen(val route: String) {
-    object Login : Screen("login")
-    object Register : Screen("register")
-    object Home : Screen("home")
-    object Catalog : Screen("catalog")
-    object Profile : Screen("profile")
+    data object Login : Screen("login")
+    data object Register : Screen("register")
+    data object Home : Screen("home")
+    data object Catalog : Screen("catalog")
+    data object Profile : Screen("profile")
 }

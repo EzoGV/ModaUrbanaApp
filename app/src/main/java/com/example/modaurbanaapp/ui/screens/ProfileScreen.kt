@@ -6,13 +6,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.modaurbanaapp.ViewModel.ProfileViewModel
 import com.example.modaurbanaapp.ViewModel.ProfileViewModelFactory
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.modaurbanaapp.ui.theme.ModaUrbanaAppTheme
 
 @Composable
 fun ProfileScreen(
@@ -46,10 +47,11 @@ fun ProfileScreen(
         Text("Bienvenido a Moda Urbana", style = MaterialTheme.typography.bodyLarge)
     }
 }
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewProfileScreen() {
-    com.example.modaurbanaapp.ui.theme.ModaUrbanaAppTheme {
+    ModaUrbanaAppTheme {
         ProfileScreen()
     }
 }

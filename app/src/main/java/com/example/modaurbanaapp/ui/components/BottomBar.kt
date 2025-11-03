@@ -2,9 +2,11 @@ package com.example.modaurbanaapp.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Storefront
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Store
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Storefront
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Store
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -15,17 +17,15 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.modaurbanaapp.ui.navigation.Screen
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.PersonAdd
-
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Lock
-import androidx.compose.material.icons.outlined.PersonAdd
 
 @Composable
 fun BottomBar(navController: NavHostController) {
-    val items = listOf(Screen.Home, Screen.Catalog)
+    // Solo rutas visibles en la barra
+    val items = listOf(
+        Screen.Home,
+        Screen.Catalog,
+        Screen.Profile
+    )
 
     NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -36,30 +36,24 @@ fun BottomBar(navController: NavHostController) {
 
             val (iconSelected, iconUnselected, label) = when (screen) {
                 Screen.Home -> Triple(Icons.Filled.Home, Icons.Outlined.Home, "Inicio")
-                Screen.Catalog -> Triple(Icons.Filled.Storefront, Icons.Outlined.Storefront, "Catálogo")
+                Screen.Catalog -> Triple(Icons.Filled.Store, Icons.Outlined.Store, "Catálogo")
                 Screen.Profile -> Triple(Icons.Filled.Person, Icons.Outlined.Person, "Perfil")
-                Screen.Login -> Triple(Icons.Filled.Lock, Icons.Outlined.Lock, "Login")
-                Screen.Register -> Triple(Icons.Filled.PersonAdd, Icons.Outlined.PersonAdd, "Registro")
+                else -> Triple(Icons.Filled.Home, Icons.Outlined.Home, "")
             }
-
 
             NavigationBarItem(
                 selected = selected,
                 onClick = {
                     if (!selected) {
                         navController.navigate(screen.route) {
+                            // Mantiene el histórico limpio y restaura estado
                             popUpTo(Screen.Home.route) { inclusive = false }
                             launchSingleTop = true
                             restoreState = true
                         }
                     }
                 },
-                icon = {
-                    Icon(
-                        imageVector = if (selected) iconSelected else iconUnselected,
-                        contentDescription = label
-                    )
-                },
+                icon = { Icon(imageVector = if (selected) iconSelected else iconUnselected, contentDescription = label) },
                 label = { Text(label) }
             )
         }
