@@ -9,7 +9,8 @@ class AuthInterceptor(
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val original = chain.request()
-        val token = sessionManager.getToken()
+        val token = sessionManager.getAuthToken() // ✅ nombre correcto del método
+
         val req = if (!token.isNullOrBlank()) {
             original.newBuilder()
                 .addHeader("Authorization", "Bearer $token")
