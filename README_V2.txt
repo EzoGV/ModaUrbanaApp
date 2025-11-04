@@ -2,7 +2,7 @@
 # ModaUrbanaApp
 
 ## 1. Caso elegido y alcance
--Una aplicación de catálogo y e-commerce orientada a moda y estilo urbano.  
+-<ModaUrbana>Una aplicación de catálogo y e-commerce orientada a moda y estilo urbano.  
 - **Alcance EP3:** Diseño/UI en Jetpack Compose, validaciones de usuario, navegación estructurada, gestión de estado, persistencia local (token y avatar), integración con cámara/galería y consumo de API remota (autenticación, productos).
 
 ---
