@@ -32,16 +32,69 @@
 ## 3. Arquitectura y flujo
 - **Estructura de carpetas:**
   ```
-  ui/
-    screens/
-    components/
-    navigation/
-  data/
-    local/
-    remote/
-    model/
-    repository/
-  ViewModel/
+com.example.modaurbanaapp/
+│
+├── MainActivity.kt                 # Punto de entrada principal de la app (Scaffold + NavHost)
+│
+├── ui/                             # Capa de interfaz de usuario (Compose)
+│   ├── navigation/
+│   │   ├── AppNavGraph.kt          # Mapa de navegación (NavHostController + rutas)
+│   │   └── Screen.kt               # Rutas centralizadas y tipadas (Login, Home, Profile, etc.)
+│   │
+│   ├── components/                 # Componentes visuales reutilizables
+│   │   ├── BottomBar.kt            # Barra inferior de navegación (Inicio, Catálogo, Carrito, Perfil)
+│   │   └── ProductCard.kt          # Tarjeta de producto con imagen, título y precio
+│   │
+│   ├── screens/                    # Pantallas principales de la aplicación
+│   │   ├── LoginScreen.kt          # Pantalla de inicio de sesión (autenticación)
+│   │   ├── RegisterScreen.kt       # Pantalla de registro de usuario
+│   │   ├── HomeScreen.kt           # Pantalla inicial tras iniciar sesión
+│   │   ├── CatalogScreen.kt        # Catálogo de productos (lista, filtros y orden)
+│   │   ├── CartScreen.kt           # Pantalla del carrito de compras
+│   │   └── ProfileScreen.kt        # Perfil del usuario (foto, cámara, galería)
+│   │
+│   ├── state/                      # Estados observables para cada vista (StateFlow)
+│   │   ├── CatalogUiState.kt       # Estado del catálogo (productos, categorías, error)
+│   │   ├── LoginUiState.kt         # Estado del login (usuario, carga, errores)
+│   │   └── RegisterUiState.kt      # Estado del registro (validación, mensajes)
+│   │
+│   └── theme/                      # Configuración visual (paleta, tipografía, estilos)
+│       ├── Color.kt                # Colores principales (Fondo crema, verde oscuro, blanco)
+│       ├── Theme.kt                # Aplicación del tema global (Material 3)
+│       └── Type.kt                 # Tipografías y jerarquías de texto
+│
+├── ViewModel/                      # Capa lógica y de negocio (MVVM)
+│   ├── LoginViewModel.kt           # Controla el flujo de login y sesión de usuario
+│   ├── RegisterViewModel.kt        # Maneja registro y validaciones del formulario
+│   ├── CatalogViewModel.kt         # Controla productos, filtros y orden de catálogo
+│   ├── CartViewModel.kt            # Lógica del carrito de compras (agregar, eliminar, total)
+│   ├── ProfileViewModel.kt         # Gestiona foto de perfil, cámara y galería
+│   └── Factories.kt                # Fábricas de ViewModel (inyección de dependencias)
+│
+├── data/                           # Fuente de datos (local + remoto)
+│   ├── local/                      # Persistencia interna y preferencias
+│   │   ├── SessionManager.kt       # Guarda el estado de sesión del usuario
+│   │   └── AvatarManager.kt        # Guarda el URI de la imagen de perfil
+│   │
+│   └── remote/                     # Comunicación con API (estructura preparada)
+│       ├── ApiService.kt           # Definición de endpoints (login, productos, etc.)
+│       ├── RetrofitClient.kt       # Configuración base de Retrofit y Gson
+│       ├── AuthInterceptor.kt      # Inserta token JWT en encabezado Authorization
+│       └── dto/                    # Modelos de transferencia de datos (DTOs)
+│           ├── AuthDtos.kt         # Clases para login/register (request y response)
+│           └── ProductDto.kt       # Clase de producto remoto (API → modelo local)
+│
+├── model/                          # Modelos de dominio de la app
+│   ├── Product.kt                  # Representa productos del catálogo (nombre, precio, imagen)
+│   └── CartItem.kt                 # Representa un producto dentro del carrito
+│
+└── repository/                     # Repositorios de datos (acceso unificado)
+    ├── ProductDataSource.kt        # Interfaz base con métodos de acceso (byCategory, featured)
+    ├── ProductRepository.kt        # Repositorio principal del catálogo
+    ├── LocalProductRepository.kt   # Implementación local (productos simulados)
+    ├── ProductRepositoryImpl.kt    # Implementación futura con Retrofit (API real)
+    └── CartRepository.kt           # Repositorio del carrito de compras (manejo local)
+
   ```
 - **Gestión de estado:**  
   Cada pantalla cuenta con su propio `ViewModel` que expone un `StateFlow` (para estados `loading`, `success`, `error`). El flujo de datos va desde el *repository* → *ViewModel* → *UI Compose*.
