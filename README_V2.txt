@@ -65,19 +65,7 @@
 
 ---
 
-## 5. Endpoints
-**Base URL:** `https://x8ki-letl-twmt.n7.xano.io/api:Rfm_61dW`
-
-| Método | Ruta         | Body                              | Respuesta                                   | Errores                                     |
-| ------ | ------------ | --------------------------------- | ------------------------------------------- | ------------------------------------------- |
-| POST   | /auth/signup | { email, password, name?, ... }   | 201 { authToken, user: { id, email, ... } } | 400 (validación), 409 (usuario existe), 500 |
-| POST   | /auth/login  | { email, password }               | 200 { authToken, user: { id, email, ... } } | 401 (credenciales inválidas), 400, 500      |
-| GET    | /auth/me     | - (requiere header Authorization) | 200 { id, email, name, avatarUrl?, ... }    | 401 (no autenticado), 403, 500              |
-| GET    | /products    | -                                 | 200 [ { id, name, price, image_url, ... } ] | 500                                         |
-
----
-
-## 6. User Flows
+## 5. User Flows
 **Flujo principal:**
 1. Usuario abre la app → LoginScreen.  
 2. Se valida usuario → se guarda token.  
