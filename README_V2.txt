@@ -2,7 +2,7 @@
 # ModaUrbanaApp
 
 ## 1. Caso elegido y alcance
-- **Caso:** EcoMarket → Adaptado como *Moda Urbana*, una aplicación de catálogo y e-commerce orientada a moda y estilo urbano.  
+-Una aplicación de catálogo y e-commerce orientada a moda y estilo urbano.  
 - **Alcance EP3:** Diseño/UI en Jetpack Compose, validaciones de usuario, navegación estructurada, gestión de estado, persistencia local (token y avatar), integración con cámara/galería y consumo de API remota (autenticación, productos).
 
 ---
@@ -85,16 +85,3 @@
 4. Desde Catálogo puede añadir productos al carrito.  
 5. Desde Perfil puede actualizar su foto con cámara o galería.  
 6. El token y avatar quedan guardados localmente entre sesiones.
-
----
-
-## 7. Progreso actual (según rúbrica)
-✅ **Hecho**
-- Diseño/UI Compose (pantallas base y componentes).  
-- Navegación (`NavHost`, `Screen`, `BottomBar`).  
-- Gestión de estado con `ViewModel` + `StateFlow`.  
-- Consumo de API (`login` y `AuthInterceptor`; DTOs corregidos).  
-- Persistencia local (token + avatar en `SharedPreferences`).  
-- Recursos nativos (cámara/galería con `FileProvider` y permisos).  
-- Carrito de compras (acción de agregar desde Catálogo).  
-````
