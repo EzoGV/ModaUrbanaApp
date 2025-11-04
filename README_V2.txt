@@ -1,5 +1,4 @@
-````{"id":"52914","variant":"standard","title":"README - ModaUrbanaApp"}
-# ModaUrbanaApp
+- ModaUrbanaApp
 
 ## 1. Caso elegido y alcance
 -<ModaUrbana>Una aplicación de catálogo y e-commerce orientada a moda y estilo urbano.  
